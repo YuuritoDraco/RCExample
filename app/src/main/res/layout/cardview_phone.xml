@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardElevation="0dp"
+    card_view:useCompatPadding="false"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardMaxElevation="0dp"
+    android:dividerHeight="0dp"
+    app:cardCornerRadius="1dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp">
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:columnCount="1"
+        android:rowCount="3">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:background="@android:drawable/btn_dialog"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:id="@+id/txtPhoneName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Tên mặt hàng điện thoại"
+            android:textStyle="bold"
+            android:textSize="19sp"/>
+        <TextView
+            android:id="@+id/txtPhonePrice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="giá mặt hàng điện thoại"
+            android:textSize="18sp"/>
+    </GridLayout>
+</android.support.v7.widget.CardView>
