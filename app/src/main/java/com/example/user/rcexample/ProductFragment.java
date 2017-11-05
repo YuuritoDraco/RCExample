@@ -50,12 +50,12 @@ public class ProductFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        //getProductList();
+
         //getProductById(3);
         //InsertOneProduct();
         //InsertManyProduct();
         //UpdateProduct();
-        deleteById(11);
+        //deleteById(11);
         List<Product> list = new ArrayList<>();
         mDb = DatabaseHelper.getInstance(getContext());
 
@@ -63,77 +63,9 @@ public class ProductFragment extends Fragment
         mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 10, true, true));
-        adapter = new ProductRececlerViewAdapter();
+        adapter = new ProductRececlerViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
-
-        //dữ liệu giả
-        //thêm mặt hàng gạo thơm lài vô adapter
-        /*Product product = new Product();
-        product.code = "GAOLAI";
-        product.name = "Gạo thơm lài";
-        product.price = 15000;
-        product.viewType = Constant.RICE;
-        adapter.add(product);
-        mDb.insertProduct(product);
-        List<Product> productList = mDb.selectProduct();
-
-        //thêm mặt hàng đt samsunghẩu vô recyclerview
-        product = new Product();
-        product.name = "Samsung note 8";
-        product.price = 15000000;
-        product.viewType = Constant.PHONE;
-        adapter.add(product);
-
-        //thêm mặt hàng gạo tấm thường vô adapter
-        product = new Product();
-        product.name = "Gạo tấm thường";
-        product.price = 10000;
-        product.viewType = Constant.RICE;
-        adapter.add(product);
-
-        //thêm mặt hàng đt iphone vô recyclerview
-        product = new Product();
-        product.name = "iPhone 7 plus";
-        product.price = 18000000;
-        product.viewType = Constant.PHONE;
-        adapter.add(product);
-
-        //thêm mặt hàng gạo tấm xuất khẩu vô adapter
-        product = new Product();
-        product.name = "Gạo tấm xuất khẩu";
-        product.price = 30000;
-        product.viewType = Constant.RICE;
-        adapter.add(product);
-
-        //thêm mặt hàng đt nokia vô recyclerview
-        product = new Product();
-        product.name = "Nokia 3";
-        product.price = 10000000;
-        product.viewType = Constant.PHONE;
-        adapter.add(product);
-
-        //thêm mặt hàng gạo lứt vô adapter
-        product = new Product();
-        product.name = "Gạo lứt";
-        product.price = 20000;
-        product.viewType = Constant.RICE;
-        adapter.add(product);
-
-        //thêm mặt hàng đt nokia vô recyclerview
-        product = new Product();
-        product.name = "Nokia 3";
-        product.price = 10000000;
-        product.viewType = Constant.PHONE;
-        adapter.add(product);
-
-        //thêm mặt hàng gạo huu cơ vô adapter
-        product = new Product();
-        product.name = "Gạo hữu cơ";
-        product.price = 50000;
-        product.viewType = Constant.RICE;
-        adapter.add(product);
-
-        adapter.notifyDataSetChanged();*/
+        getProductList();
     }
     // select
     private void getProductList()
@@ -150,6 +82,11 @@ public class ProductFragment extends Fragment
                         if (response.isSuccessful())
                         {
                             mList = response.body();
+/*                            for(int idx = 0; idx < mList.size(); idx++)
+                            {
+                                adapter.add(mList.get(idx));
+                            }
+                            adapter.notifyDataSetChanged();*/
                         }
                         else
                         {
