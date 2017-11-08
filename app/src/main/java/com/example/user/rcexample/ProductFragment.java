@@ -13,12 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.user.rcexample.database.DatabaseHelper;
+import com.example.user.rcexample.restful.ProductApi;
 import com.example.user.rcexample.restful.RestClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,329 +69,47 @@ public class ProductFragment extends Fragment
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 10, true, true));
         adapter = new ProductRececlerViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
-        getProductList();
+
+        ProductApi.setOnProductCallbackListener(new ProductApi.ProductCallbackListener()
+        {
+            @Override
+            public void onGetProductList(List<Product> list)
+            {
+                for(int idx = 0; idx < list.size(); idx++)
+                {
+                    adapter.add(list.get(idx));
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        ProductApi.getProductList();
+
+        String md5 = getMD5("abc");
+    }
+
+    private String getMD5(String input)
+    {
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+            // Now we need to zero pad it if you actually want the full 32 chars.
+            while (hashtext.length() < 32)
+            {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
     // select
-    private void getProductList()
-    {
-        try
-        {
-            RestClient.getRest().getProductList().enqueue(new Callback<List<Product>>()
-            {
-                @Override
-                public void onResponse(Call<List<Product>> call, Response<List<Product>> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-                            mList = response.body();
-/*                            for(int idx = 0; idx < mList.size(); idx++)
-                            {
-                                adapter.add(mList.get(idx));
-                            }
-                            adapter.notifyDataSetChanged();*/
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<List<Product>> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void getProductById(int id)
-    {
-        try
-        {
-            RestClient.getRest().getProductById(id).enqueue(new Callback<Product>()
-            {
-                @Override
-                public void onResponse(Call<Product> call, Response<Product> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-                            Product product = response.body();
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Product> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    // insert
-    private void InsertOneProduct()
-    {
-        try
-        {
-            Product product = new Product();
-            product.productname = "AAA";
-            product.productprice = 15000;
-            product.productimageurl = "abc.jpg";
-
-            Gson gson = new GsonBuilder().create();
-            JsonObject postObject = gson.toJsonTree(product).getAsJsonObject();
-
-            RestClient.getRest().insertOneProduct(postObject).enqueue(new Callback<String>()
-            {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-                            int a = 0;
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void InsertManyProduct()
-    {
-        try
-        {
-            List<Product> productList = new ArrayList<>();
-            Product product = new Product();
-            product.productname = "CCC";
-            product.productprice = 15000;
-            product.productimageurl = "abc.jpg";
-            productList.add(product);
-
-            product = new Product();
-            product.productname = "BBB";
-            product.productprice = 20000;
-            product.productimageurl = "xyz.jpg";
-            productList.add(product);
-
-
-            Gson gson = new GsonBuilder().create();
-            JsonArray postArray = gson.toJsonTree(productList).getAsJsonArray();
-
-            RestClient.getRest().insertManyProduct(postArray).enqueue(new Callback<String>()
-            {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-                            int a = 0;
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    // update
-    private void UpdateProduct()
-    {
-        try
-        {
-            Product product = new Product();
-            product.productid = 11;
-            product.productname = "Ti";
-            product.productprice = 100000;
-            product.productimageurl = "abc.jpg";
-
-
-
-
-
-            Gson gson = new GsonBuilder().create();
-            JsonObject postObject = gson.toJsonTree(product).getAsJsonObject();
-
-            RestClient.getRest().updateProduct(postObject).enqueue(new Callback<String>()
-            {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-                            int a = 0;
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void deleteById(int id)
-    {
-        try
-        {
-            RestClient.getRest().deleteProduct(id).enqueue(new Callback<String>()
-            {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response)
-                {
-                    try
-                    {
-                        if (response.isSuccessful())
-                        {
-
-                        }
-                        else
-                        {
-                            //lỗi không có kết quả
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t)
-                {
-                    try
-                    {
-                        Log.e("getFileCheckSum", "failed");
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)

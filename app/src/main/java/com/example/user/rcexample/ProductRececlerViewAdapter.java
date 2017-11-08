@@ -2,6 +2,7 @@ package com.example.user.rcexample;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.load.Key;
 import com.bumptech.glide.module.AppGlideModule;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.user.rcexample.Utilities.NumberUtility;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Created by user on 10/21/2017.
@@ -26,6 +31,7 @@ public class ProductRececlerViewAdapter extends RecyclerView.Adapter<ProductRece
 {
     List<Product> mList = new ArrayList<>();
     Context mContext;
+    static Level level = Level.WARNING;
     public ProductRececlerViewAdapter(Context context)
     {
         mContext = context;
@@ -88,6 +94,7 @@ public class ProductRececlerViewAdapter extends RecyclerView.Adapter<ProductRece
 
         public void bindData(Product object)
         {
+            Log.d("bindData", "begin");
             try
             {
                 txtRiceName.setText(object.productname);
@@ -95,12 +102,19 @@ public class ProductRececlerViewAdapter extends RecyclerView.Adapter<ProductRece
                 txtRicePrice.setText("Giá: " + price);
 
                 String url = Constant.IMGE_URL + object.productimageurl;
-                GlideApp.with(mContext).load(url).into(imgRice);
+                Log.i("bindData", "url");
+                //string ck = getChecksum(url);
+                GlideApp.with(mContext)
+                        .load(url)
+                        .signature(new ObjectKey(""))
+                        .into(imgRice);
+
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
+            Log.d("bindData", "end");
         }
     }
 
